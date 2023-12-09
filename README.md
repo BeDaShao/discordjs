@@ -1,1 +1,2 @@
 - discordjs guide - https://discordjs.guide/#before-you-begin
+- youtbube - https://www.youtube.com/playlist?list=PLSCgthA1AnidGdmSea6V6N24O8mXESrf3
