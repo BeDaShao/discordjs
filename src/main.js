@@ -1,6 +1,9 @@
 // Require the necessary discord.js classes
-import { Client, Events, GatewayIntentBits } from 'discord.js';
-import dotenv from 'dotenv';    // 為了從.env檔案中取得環境變數，這個方法需要額外安裝dotenv套件
+import { Client, Events, GatewayIntentBits } from "discord.js";
+import dotenv from "dotenv"; // 為了從.env檔案中取得環境變數，這個方法需要額外安裝dotenv套件
+import vueInit from "@/core/vue"; // 預設導出(export default)就不用寫大括號，而且物件名稱可以自己取
+
+vueInit(); // vue.js --pinia
 
 dotenv.config();
 
@@ -10,8 +13,8 @@ const client = new Client({ intents: [GatewayIntentBits.Guilds] });
 // When the client is ready, run this code (only once).
 // The distinction between `client: Client<boolean>` and `readyClient: Client<true>` is important for TypeScript developers.
 // It makes some properties non-nullable.
-client.once(Events.ClientReady, readyClient => {
-	console.log(`Ready! Logged in as ${readyClient.user.tag}`);
+client.once(Events.ClientReady, (readyClient) => {
+    console.log(`Ready! Logged in as ${readyClient.user.tag}`);
 });
 
 // Log in to Discord with your client's token
