@@ -5,6 +5,7 @@ import { createPinia } from "pinia";
 // pinia 運行在vue底下的插件，所以要先建立vue再建立pinia
 
 export default () => {
+    console.log("vue init"); // ! - test msg
     const vue = createApp({});
     const pinia = createPinia();
 
