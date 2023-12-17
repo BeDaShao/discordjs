@@ -16,8 +16,10 @@ axios({
 
 import { REST } from "discord.js";
 import { Routes } from "discord.js";
+import { Collection } from "discord.js"; // dicord.js提供的資料結構，由一堆map組成
 import dotenv from "dotenv";
 import fg from "fast-glob"; // 快速讀取檔案 --doc. -  https://www.npmjs.com/package/fast-glob -- 已包含在discord.js套件中
+import { useAppStore } from "@/store/app";
 
 dotenv.config();
 
@@ -48,17 +50,22 @@ const updateSlashCommands = async (commands) => {
 
 export const loadCommands = async () => {
     const commands = [];
+    const files = await fg("./src/commands/**/index.js"); // 得到所有指令檔案路徑
 
-    const files = await fg("./src/commands/**/index.js");
-    console.log(files); //檢查路徑
+    const appStore = useAppStore();
+    const actions = new Collection(); // --collection: dc.js提供的結構，剛好符合actions map 的使用需求
 
     // 第一個 ** 表示該資料夾底下所有東西
     // *.js表其底下所有js檔案 --目前只會用到 index.js
     for (const file of files) {
         //動態import -- 寫法 import()
         const cmd = await import(file); // cmd for command -- file 代表指令index.js所在路徑
-        commands.push(cmd.command);
+        commands.push(cmd.command); // 把指令描述上傳到dc上
+        actions.set(cmd.command.name, cmd.action);
     }
 
     await updateSlashCommands(commands);
+    appStore.commandsActionMap = actions;
+
+    console.log(appStore.commandsActionMap);
 };
