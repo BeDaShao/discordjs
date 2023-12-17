@@ -1,19 +1,3 @@
-/*  #一般的做法
-const updateSlashCommands = () => {
-
-// 註冊斜線指令  使用http請求 --根據discord api
-// 使用axios 框架發送http request -- axios 是ajax方法中的一個框架
-
-axios({
-    method: "PUT",
-    url: "",
-    header: "",
-    date: {},
-});
-};
--- END 
-*/
-
 import { REST } from "discord.js";
 import { Routes } from "discord.js";
 import { Collection } from "discord.js"; // dicord.js提供的資料結構，由一堆map組成
@@ -34,7 +18,7 @@ const updateSlashCommands = async (commands) => {
     // -- 其中包含大部分api的路徑，但是仍要帶上參數，例如guild id等等
     2. options: 額外的選項，這邊帶上指令的資料
      */
-    await rest.put(
+    const result = await rest.put(
         Routes.applicationGuildCommands(
             // 1. application id, ,2. guild id --建議將guild id以參數帶入
             process.env.APPLICATION_ID, // application id -- 機器人id
@@ -45,6 +29,7 @@ const updateSlashCommands = async (commands) => {
             }
         )
     );
+    console.log(result); // error: result 沒東西
     console.log("Updated slash commands!");
 };
 
