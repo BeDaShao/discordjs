@@ -22,13 +22,14 @@ const updateSlashCommands = async (commands) => {
         Routes.applicationGuildCommands(
             // 1. application id, ,2. guild id --建議將guild id以參數帶入
             process.env.APPLICATION_ID, // application id -- 機器人id
-            "1167406550990717020", //guild id --把"開發者模式"選項打開，在進入你的伺服器(必須是自己的或你有管理員身分)並對伺服器右鍵並點擊"複製伺服器 ID"
-            {
-                body: commands, // 3. command data (which is option parameter -- depends on what api to use)
-                // -- 利用檔案讀取方式，讀取commands資料夾底下的所有指令
-            }
-        )
+            "1167406550990717020" //guild id --把"開發者模式"選項打開，在進入你的伺服器(必須是自己的或你有管理員身分)並對伺服器右鍵並點擊"複製伺服器 ID"
+        ),
+        {
+            body: commands, // 3. command data (optional parameter -- depends on what api to use)
+            // -- 利用檔案讀取方式，讀取commands資料夾底下的所有指令
+        }
     );
+    // console.log(commands);
     console.log(result); // error: result 沒東西
     console.log("Updated slash commands!");
 };
@@ -43,8 +44,7 @@ export const loadCommands = async () => {
     // 第一個 ** 表示該資料夾底下所有東西
     // *.js表其底下所有js檔案 --目前只會用到 index.js
     for (const file of files) {
-        //動態import -- 寫法 import()
-        const cmd = await import(file); // cmd for command -- file 代表指令index.js所在路徑
+        const cmd = await import(file); // cmd for command -- file 代表指令index.js所在路徑 ;動態import -- 寫法 import()
         commands.push(cmd.command); // 把指令描述上傳到dc上
         actions.set(cmd.command.name, cmd.action);
     }
