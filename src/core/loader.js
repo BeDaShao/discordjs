@@ -30,7 +30,7 @@ const updateSlashCommands = async (commands) => {
         }
     );
     // console.log(commands);
-    console.log(result); // error: result 沒東西
+    console.log(result);
     console.log("Updated slash commands!");
 };
 
