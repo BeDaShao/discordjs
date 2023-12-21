@@ -3,3 +3,4 @@
 -   discord developer portal - https://discord.com/developers/docs/reference
 -   pinia doc. --difining a store - https://pinia.vuejs.org/core-concepts/
 -   fast glob - https://www.npmjs.com/package/fast-glob
+-   register guildcommands api (from discord.js) - https://discordjs.guide/creating-your-bot/command-deployment.html#guild-commands
