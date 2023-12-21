@@ -10,6 +10,7 @@ dotenv.config();
 // rest for rest api
 // discord.js 提供的發送api方法
 
+// 更新伺服器上的指令參照名稱 -- 聊天室上的指令名稱表
 const updateSlashCommands = async (commands) => {
     // init rest object -- api處理的方法 -- 使用rest api 方法等同於傳送axios請求出去
     const rest = new REST({ version: "10" }).setToken(process.env.TOKEN); // api version: 可以在discord doc 上面查看當前可用的api版本
@@ -34,23 +35,54 @@ const updateSlashCommands = async (commands) => {
     console.log("Updated slash commands!");
 };
 
+//自動更新指令的參照名稱，並把名稱和行動建成一組collection
 export const loadCommands = async () => {
     const commands = [];
     const files = await fg("./src/commands/**/index.js"); // 得到所有指令檔案路徑
-
     const appStore = useAppStore();
     const actions = new Collection(); // --collection: dc.js提供的結構，剛好符合actions map 的使用需求
 
     // 第一個 ** 表示該資料夾底下所有東西
-    // *.js表其底下所有js檔案 --目前只會用到 index.js
+    // *.js表其底下所有js檔案 --目前只會用  到 index.js
     for (const file of files) {
         const cmd = await import(file); // cmd for command -- file 代表指令index.js所在路徑 ;動態import -- 寫法 import()
         commands.push(cmd.command); // 把指令描述上傳到dc上
-        actions.set(cmd.command.name, cmd.action);
+        actions.set(cmd.command.name, cmd.action); // collection 的新增內容方法 set()-- set(key, value)
     }
 
-    await updateSlashCommands(commands);
-    appStore.commandsActionMap = actions;
+    await updateSlashCommands(commands); // 更新伺服器上的指令參照名稱
+    appStore.commandsActionMap = actions; // 更新commands action map
 
     console.log(appStore.commandsActionMap);
+};
+
+export const loadEvents = async () => {
+    /*
+    和上面loadCommands很像，我們要做:
+    1.  我們要遍歷events資料夾底下的檔案
+    2. 導入事件參數
+     */
+    const files = await fg("./src/events/**/index.js");
+
+    // 取得client -- 之前已經把client從main.js更新到store中了 -- 執行事件時需用到client
+    const appStore = useAppStore();
+    const client = appStore.client;
+    // 遍歷
+    /* 
+    按照原本監聽指令的方式下去替換參數 
+    事件有分為 on , once兩種模式，所以用if else去判斷
+    同時在event資料夾結構中，加入一個isOnce的變數區分
+    */
+    for (const file of files) {
+        const eventFile = await import(file); //動態引入
+        // 導入event的結構 -- 使用isOnce判斷事件類型
+        if (eventFile.event.isOnce) {
+            client.once(eventFile.event.name, eventFile.action);
+        } else {
+            client.on(eventFile.event.name, eventFile.action);
+        }
+        // !問題log: event吃不到contexts參數 (client名稱)--解決: eventFile.action 其物件本身就是一個function不用在加上()
+        // ?問題: client 定義在main.js中，在loader當中並沒有定義 -- 解決: 使用store
+        // 當client被宣告的時候，同時把client放到store中存放 -- 共用
+    }
 };
