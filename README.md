@@ -4,3 +4,4 @@
 -   pinia doc. --difining a store - https://pinia.vuejs.org/core-concepts/
 -   fast glob - https://www.npmjs.com/package/fast-glob
 -   register guildcommands api (from discord.js) - https://discordjs.guide/creating-your-bot/command-deployment.html#guild-commands
+-   event returned parameter ref. (discord.js/doc./client/Events/...) - https://old.discordjs.dev/#/docs/discord.js/14.14.1/class/Client?scrollTo=e-interactionCreate
