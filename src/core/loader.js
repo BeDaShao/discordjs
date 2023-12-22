@@ -75,6 +75,7 @@ export const loadEvents = async () => {
     */
     for (const file of files) {
         const eventFile = await import(file); //動態引入
+
         // 導入event的結構 -- 使用isOnce判斷事件類型
         if (eventFile.event.isOnce) {
             client.once(eventFile.event.name, eventFile.action);

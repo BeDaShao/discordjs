@@ -7,7 +7,7 @@ export const event = {
 };
 
 // ? 問題: 如何看event會傳過來甚麼參數 -- 解決: 看discord.js的 Clinet物件/Events物件/...各種事件 底下會有標示
-export const actions = async (interaction) => {
+export const action = async (interaction) => {
     console.log(interaction.commandName);
     // 過濾其他指令 -- 斜線指令 和其他兩種指令 -- 此處我們只要斜線指令
     if (!interaction.isChatInputCommand()) return;
